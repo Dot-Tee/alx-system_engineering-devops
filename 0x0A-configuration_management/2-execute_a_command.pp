@@ -1,8 +1,5 @@
-# Create a Puppet manifest file, e.g., kill_process.pp
-
-exec { 'killmenow_process':
-  command     => 'pkill -f "killmenow"',
-  path        => '/usr/local/bin:/usr/bin',
-  logoutput   => true,
-  refreshonly => true,
+# execute pkill command to kill bashscript file killmenow
+exec { 'pkill':
+  command => 'pkill -9 -f killmenow',
+  path    => ['/usr/bin', '/usr/sbin', '/bin']
 }
