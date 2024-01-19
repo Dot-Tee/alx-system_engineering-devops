@@ -1,6 +1,5 @@
 #!usr/bin/pup
 # Create a Puppet manifest file
-
 package { 'python3-pip':
   ensure => installed,
 }
