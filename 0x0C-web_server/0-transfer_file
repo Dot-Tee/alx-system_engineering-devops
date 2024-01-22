@@ -1,0 +1,32 @@
+#!/usr/bin/env bash
+# Writing th function to display usage
+# Transfers file from client to a server
+# Function to display usage
+display_usage() {
+	echo "Usage: $0 PATH_TO_FILE IP USERNAME PATH_TO_SSH_KEY"
+}
+
+# This is used to check the number of agruments
+if [ "$#" -lt 4 ]; then
+	display_usage
+	exit 1
+fi
+
+# Assign arguments to variables
+file_path="$1"
+server_ip="$2"
+username="$3"
+ssh_key="$4"
+
+# Disable strict host key checking for scp
+export SCP="scp -o StrictHostKeyChecking=no -i $ssh_key"
+
+# Transfer the file to the server's home directory
+$SCP "$file_path" "$username@$server_ip:~/"
+
+# Check the exit status of the scp command
+if [ $? -eq 0 ]; then
+	echo "File transferred successfully."
+else
+	echo "Error transferring file. Check the parameter keys and try again."
+fi
