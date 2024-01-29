@@ -1,0 +1,3 @@
+#!/usr/bin/env bash
+# Allowa me to connet to ubuntu using my private keys
+ssh -i ~/.ssh/school ubuntu@34.202.159.33
