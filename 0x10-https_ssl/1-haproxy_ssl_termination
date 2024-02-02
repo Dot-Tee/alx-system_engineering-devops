@@ -47,5 +47,5 @@ frontend www-dottee-tech-ssl
 
 backend dottee-tech-backend
         balance roundrobin
-        server 135930-web-01 34.202.159.33 check port 80
-        server 135930-web-02 54.81.203.100 check port 80
+        server 135930-web-01 34.202.159.33:80 check
+        server 135930-web-02 54.81.203.100:80 check
