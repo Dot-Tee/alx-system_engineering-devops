@@ -1,39 +1,29 @@
 #!/usr/bin/python3
-import requests
+"""Accessing a REST API for todo lists of employees"""
 
-def recurse(subreddit, hot_list=[]):
-    """
-    Recursively queries the Reddit API and returns a list of hot article titles for a given subreddit.
-    Args:
-        subreddit (str): The name of the subreddit.
-        hot_list (list, optional): Accumulator for hot article titles. Defaults to an empty list.
-    Returns:
-        list or None: List of hot article titles or None if the subreddit is invalid or has no hot articles.
-    """
-    base_url = f"https://www.reddit.com/r/{subreddit}/hot.json"
-    headers = {"User-Agent": "MyRedditBot"}  # Add your custom User-Agent here
-    try:
-        response = requests.get(base_url, headers=headers)
-        response_data = response.json()
-        if "data" in response_data and "children" in response_data["data"]:
-            children = response_data["data"]["children"]
-            for child in children:
-                title = child["data"]["title"]
-                hot_list.append(title)
-            if "after" in response_data["data"]:
-                # Recursive call for the next page
-                return recurse(subreddit, hot_list, after=response_data["data"]["after"])
-            else:
-                return hot_list
-        else:
-            return None  # Invalid subreddit or no hot articles
-    except requests.RequestException:
-        return None  # Error occurred during API request
-# Example usage:
-subreddit_name = "learnprogramming"
-hot_articles = recurse(subreddit_name)
-if hot_articles:
-    for i, title in enumerate(hot_articles, start=1):
-        print(f"{i}. {title}")
-else:
-    print(f"No hot articles found for subreddit '{subreddit_name}' or invalid subreddit.")
+import json
+import requests
+import sys
+
+
+if __name__ == '__main__':
+    employeeId = sys.argv[1]
+    baseUrl = "https://jsonplaceholder.typicode.com/users"
+    url = baseUrl + "/" + employeeId
+
+    response = requests.get(url)
+    username = response.json().get('username')
+
+    todoUrl = url + "/todos"
+    response = requests.get(todoUrl)
+    tasks = response.json()
+
+    dictionary = {employeeId: []}
+    for task in tasks:
+        dictionary[employeeId].append({
+            "task": task.get('title'),
+            "completed": task.get('completed'),
+            "username": username
+        })
+    with open('{}.json'.format(employeeId), 'w') as filename:
+        json.dump(dictionary, filename)
